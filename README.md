@@ -42,8 +42,28 @@ After the convolution and pooling layers, the module flattens the image data and
 
 # Analyzing Images with TensorFlow
 
+A TensorFlow application can remove noise from an image by performing convolution with a 3-by-3 filter with constant elements. The img_proc.py module performs convolution and five other operations:
+- Changes the image’s contrast by calling tf.image.adjust_contrast
+- Mirrors the image horizontally by calling tf.image.flip_left_right
+- Converts the data to PNG format and writes the data to a PNG file
+- Generates summary data for viewing the image in TensorBoard
+- Stores the resulting pixels in a file named output_aircraft.png
 
+The process of generating summary data for an image is like that of generating data for a tensor. The only difference is that the application needs to call `tf.summary.image` instead of `tf.summary.scalar` or `tf.summary.histogram`. The function’s signature is given as follows:
 
+```
+tf.summary.image(name, tensor, max_outputs=3, collections=None, family=None)
+```
+
+The `name` parameter provides the label that TensorFlow will associate with the image. The function accepts the image data through the tensor parameter, and the tensor’s shape must be [batch_size, height, width, num_channels].  
+
+The img_proc.py module creates an operation that generates summary data for `img_tensor` with the following code:
+
+```
+summary_op = tf.summary.image(‘Output’, img_tensor)
+```
+
+After creating this operation, the application executes it in a session and uses a FileWriter to print the protocol buffer to an event file. When launched, TensorBoard will read this event file and display the graphical content of `img_tensor`.
 
   
   
